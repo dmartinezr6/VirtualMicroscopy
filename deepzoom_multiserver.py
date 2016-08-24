@@ -41,7 +41,8 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('DEEPZOOM_MULTISERVER_SETTINGS', silent=True)
 
-logging.basicConfig(filename='debugging.log',level=logging.WARNING,format='%(asctime)s %(message)s')
+#logging.basicConfig(filename='debugging.log',level=logging.WARNING,format='%(asctime)s %(message)s')
+logging.basicConfig(filename='/home/hpclab/debugging.log',level=logging.WARNING,format='%(asctime)s %(message)s')
 
 class PILBytesIO(BytesIO):
     def fileno(self):
@@ -55,7 +56,7 @@ class _SlideCache(object):
         self.dz_opts = dz_opts
         self._lock = Lock()
         self._cache = OrderedDict()
-		logging.warning('cache size %d', cahe_size)
+        logging.warning('cache size %d', cache_size)
 
     def get(self, path):
         with self._lock:
