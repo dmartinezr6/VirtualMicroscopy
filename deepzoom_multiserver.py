@@ -27,6 +27,7 @@ from openslide.deepzoom import DeepZoomGenerator
 import os
 from optparse import OptionParser
 from threading import Lock
+import logging
 
 SLIDE_DIR = '.'
 SLIDE_CACHE_SIZE = 10
@@ -40,6 +41,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('DEEPZOOM_MULTISERVER_SETTINGS', silent=True)
 
+logging.basicConfig(filename='debugging.log',level=logging.WARNING,format='%(asctime)s %(message)s')
 
 class PILBytesIO(BytesIO):
     def fileno(self):
@@ -53,6 +55,7 @@ class _SlideCache(object):
         self.dz_opts = dz_opts
         self._lock = Lock()
         self._cache = OrderedDict()
+		logging.warning('cache size %d', cahe_size)
 
     def get(self, path):
         with self._lock:
