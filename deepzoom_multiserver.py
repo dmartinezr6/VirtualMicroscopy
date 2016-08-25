@@ -133,7 +133,7 @@ def _get_slide(path):
 
 @app.route('/')
 def index():
-    logging.warning('pagina inicio %s', root_dir)
+    logging.warning('pagina inicio %s', _Directory(app.basedir))
     return render_template('files.html', root_dir=_Directory(app.basedir))
 
 
