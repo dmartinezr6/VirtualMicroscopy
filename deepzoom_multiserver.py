@@ -133,11 +133,13 @@ def _get_slide(path):
 
 @app.route('/')
 def index():
+    logging.warning('pagina inicio %s', root_dir)
     return render_template('files.html', root_dir=_Directory(app.basedir))
 
 
 @app.route('/<path:path>')
 def slide(path):
+    logging.warning('solicita slide: %s', path)
     slide = _get_slide(path)
     slide_url = url_for('dzi', path=path)
     return render_template('slide-fullpage.html', slide_url=slide_url,
@@ -146,6 +148,7 @@ def slide(path):
 
 @app.route('/<path:path>.dzi')
 def dzi(path):
+    logging.warning('solicita slide DZI: %s', path)
     slide = _get_slide(path)
     format = app.config['DEEPZOOM_FORMAT']
     resp = make_response(slide.get_dzi(format))
@@ -155,6 +158,7 @@ def dzi(path):
 
 @app.route('/<path:path>_files/<int:level>/<int:col>_<int:row>.<format>')
 def tile(path, level, col, row, format):
+    logging.warning('request tile: %s,%d,%d,%d', path, level, col, row)
     slide = _get_slide(path)
     format = format.lower()
     if format != 'jpeg' and format != 'png':
@@ -166,9 +170,11 @@ def tile(path, level, col, row, format):
         # Invalid level or coordinates
         abort(404)
     buf = PILBytesIO()
+    logging.warning('recover tile: %s,%d,%d,%d', path, level, col, row)
     tile.save(buf, format, quality=app.config['DEEPZOOM_TILE_QUALITY'])
     resp = make_response(buf.getvalue())
     resp.mimetype = 'image/%s' % format
+    logging.warning('response tile: %s,%d,%d,%d', path, level, col, row)
     return resp
 
 
